@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>こどもランド v2</title>
+
+<style>
+body{
+margin:0;
+font-family:"Yu Gothic",sans-serif;
+background:linear-gradient(#8ee3ff,#fff6b5);
+}
+
+header{
+background:#ff8fab;
+color:white;
+padding:16px;
+font-size:32px;
+font-weight:bold;
+text-align:center;
+}
+
+#menu{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+padding:15px;
+}
+
+#menu button{
+border:none;
+border-radius:15px;
+padding:12px 16px;
+font-size:18px;
+background:#ffffff;
+cursor:pointer;
+box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+
+.page{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+.card{
+background:white;
+border-radius:20px;
+padding:20px;
+max-width:700px;
+margin:auto;
+box-shadow:0 4px 10px rgba(0,0,0,.15);
+}
+
+.character{
+font-size:80px;
+text-align:center;
+}
+
+.big{
+font-size:42px;
+text-align:center;
+margin:20px;
+}
+
+.answerBtn{
+background:#4dabf7;
+color:white;
+border:none;
+padding:12px 20px;
+margin:5px;
+border-radius:12px;
+font-size:24px;
+}
+
+.status{
+font-size:22px;
+line-height:1.8;
+}
+
+.badges{
+font-size:40px;
+}
+
+.stamp{
+font-size:50px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+🎮 こどもランド v2
+</header>
+
+<div id="menu">
+<button onclick="showPage('home')">🏠</button>
+<button onclick="showPage('janken')">✊</button>
+<button onclick="showPage('add')">➕</button>
+<button onclick="showPage('sub')">➖</button>
+<button onclick="showPage('chara')">🐣</button>
+</div>
+
+<div id="home" class="page active">
+<div class="card">
+<h2>ようこそ！</h2>
+
+<div class="character" id="homeChara">🥚</div>
+
+<div class="status">
+レベル：<span id="levelHome">1</span><br>
+EXP：<span id="expHome">0</span><br>
+せいかい：<span id="correctHome">0</span>
+</div>
+
+<h3>🏆 メダル</h3>
+<div id="medalsHome" class="badges">－</div>
+
+<h3>📅 今日のスタンプ</h3>
+<div id="todayStamp" class="stamp">❌</div>
+</div>
+</div>
+
+<div id="janken" class="page">
+<div class="card">
+<h2>✊じゃんけん✋</h2>
+
+<button onclick="playJanken('グー')">✊</button>
+<button onclick="playJanken('チョキ')">✌️</button>
+<button onclick="playJanken('パー')">✋</button>
+
+<div id="jankenResult" class="big">
+じゃんけんしよう！
+</div>
+</div>
+</div>
+
+<div id="add" class="page">
+<div class="card">
+<h2>➕たしざん</h2>
+
+<div id="addQuestion" class="big"></div>
+
+<div id="addAnswers"></div>
+
+<div id="addResult"></div>
+</div>
+</div>
+
+<div id="sub" class="page">
+<div class="card">
+<h2>➖ひきざん</h2>
+
+<div id="subQuestion" class="big"></div>
+
+<div id="subAnswers"></div>
+
+<div id="subResult"></div>
+</div>
+</div>
+
+<div id="chara" class="page">
+<div class="card">
+
+<h2>🐣 キャラクター</h2>
+
+<div id="character" class="character">🥚</div>
+
+<div class="status">
+レベル：<span id="level">1</span><br>
+EXP：<span id="exp">0</span><br>
+せいかい数：<span id="correct">0</span>
+</div>
+
+<h3>🏆 メダル</h3>
+
+<div id="medals" class="badges">－</div>
+
+</div>
+</div>
+
+<script>
+
+let data = JSON.parse(
+localStorage.getItem("kidsLand")
+) || {
+exp:0,
+level:1,
+correct:0,
+lastLogin:"",
+};
+
+function save(){
+localStorage.setItem(
+"kidsLand",
+JSON.stringify(data)
+);
+}
+
+function today(){
+return new Date().toISOString().split("T")[0];
+}
+
+function showPage(id){
+
+document
+.querySelectorAll(".page")
+.forEach(p=>p.classList.remove("active"));
+
+document
+.getElementById(id)
+.classList.add("active");
+}
+
+function addExp(v){
+
+data.exp += v;
+data.correct++;
+
+data.level =
+Math.floor(data.exp / 50)+1;
+
+save();
+
+updateUI();
+}
+
+function getCharacter(){
+
+if(data.level>=12) return "🐉";
+if(data.level>=8) return "🦅";
+if(data.level>=5) return "🐤";
+if(data.level>=3) return "🐣";
+
+return "🥚";
+}
+
+function medals(){
+
+let m=[];
+
+if(data.correct>=3) m.push("🥉");
+if(data.correct>=10) m.push("🥈");
+if(data.correct>=20) m.push("🥇");
+if(data.correct>=50) m.push("🏆");
+if(data.correct>=100) m.push("👑");
+
+return m.length?m.join(" "):"－";
+}
+
+function updateUI(){
+
+document.getElementById("level").textContent=data.level;
+document.getElementById("exp").textContent=data.exp;
+document.getElementById("correct").textContent=data.correct;
+
+document.getElementById("character").textContent=getCharacter();
+
+document.getElementById("medals").textContent=medals();
+
+document.getElementById("levelHome").textContent=data.level;
+document.getElementById("expHome").textContent=data.exp;
+document.getElementById("correctHome").textContent=data.correct;
+document.getElementById("homeChara").textContent=getCharacter();
+document.getElementById("medalsHome").textContent=medals();
+}
+
+if(data.lastLogin!==today()){
+
+data.lastLogin=today();
+
+data.exp += 5;
+
+save();
+
+document.getElementById("todayStamp")
+.textContent="⭐";
+}
+else{
+
+document.getElementById("todayStamp")
+.textContent="✅";
+}
+
+function playJanken(player){
+
+const hands=["グー","チョキ","パー"];
+const cpu=hands[Math.floor(Math.random()*3)];
+
+let msg="";
+
+if(player===cpu){
+msg="😆 あいこ";
+}
+else if(
+(player==="グー"&&cpu==="チョキ")||
+(player==="チョキ"&&cpu==="パー")||
+(player==="パー"&&cpu==="グー")
+){
+msg="🎉 かった！";
+addExp(10);
+}
+else{
+msg="😢 まけた";
+}
+
+document.getElementById("jankenResult")
+.innerHTML=`${msg}<br>${cpu}`;
+}
+
+function createMath(type){
+
+let a=Math.floor(Math.random()*90)+10;
+let b=Math.floor(Math.random()*90)+10;
+
+let answer=
+type==="add" ? a+b : a-b;
+
+if(type==="sub" && answer<0){
+[a,b]=[b,a];
+answer=a-b;
+}
+
+const q=
+type==="add"
+? `${a}+${b}`
+: `${a}-${b}`;
+
+const area=
+document.getElementById(
+type==="add"
+?"addAnswers"
+:"subAnswers"
+);
+
+document.getElementById(
+type==="add"
+?"addQuestion"
+:"subQuestion"
+).textContent=q;
+
+let choices=[answer];
+
+while(choices.length<4){
+
+let w=
+answer+
+Math.floor(Math.random()*21)-10;
+
+if(!choices.includes(w))
+choices.push(w);
+}
+
+choices.sort(()=>Math.random()-0.5);
+
+area.innerHTML="";
+
+choices.forEach(v=>{
+
+const btn=
+document.createElement("button");
+
+btn.className="answerBtn";
+btn.textContent=v;
+
+btn.onclick=()=>{
+
+if(v===answer){
+
+addExp(10);
+
+document.getElementById(
+type==="add"
+?"addResult"
+:"subResult"
+).innerHTML="🎉 せいかい！";
+
+}
+else{
+
+document.getElementById(
+type==="add"
+?"addResult"
+:"subResult"
+).innerHTML=
+"😢 ざんねん";
+}
+
+setTimeout(()=>createMath(type),800);
+};
+
+area.appendChild(btn);
+});
+}
+
+createMath("add");
+createMath("sub");
+updateUI();
+
+</script>
+
+</body>
+</html>
