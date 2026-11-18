@@ -90,6 +90,18 @@ font-size:40px;
 .stamp{
 font-size:50px;
 }
+
+.handBtn{
+width:120px;
+height:120px;
+font-size:60px;
+border:none;
+border-radius:25px;
+background:#ffd166;
+margin:10px;
+cursor:pointer;
+} 
+  
 </style>
 </head>
 
@@ -105,6 +117,7 @@ font-size:50px;
 <button onclick="showPage('add')">➕</button>
 <button onclick="showPage('sub')">➖</button>
 <button onclick="showPage('chara')">🐣</button>
+<button onclick="showPage('color')">🎨</button>  
 </div>
 
 <div id="home" class="page active">
@@ -131,9 +144,9 @@ EXP：<span id="expHome">0</span><br>
 <div class="card">
 <h2>✊じゃんけん✋</h2>
 
-<button onclick="playJanken('グー')">✊</button>
-<button onclick="playJanken('チョキ')">✌️</button>
-<button onclick="playJanken('パー')">✋</button>
+<button class="handBtn" onclick="playJanken('グー')">✊</button>
+<button class="handBtn" onclick="playJanken('チョキ')">✌️</button>
+<button class="handBtn" onclick="playJanken('パー')">✋</button>
 
 <div id="jankenResult" class="big">
 じゃんけんしよう！
@@ -178,6 +191,28 @@ EXP：<span id="exp">0</span><br>
 せいかい数：<span id="correct">0</span>
 </div>
 
+<div id="color" class="page">
+<div class="card">
+
+<h2>🎨 いろあてゲーム</h2>
+
+<div id="colorBox"
+style="
+width:180px;
+height:180px;
+margin:auto;
+border-radius:20px;
+border:6px solid #333;
+">
+</div>
+
+<div id="colorAnswers"></div>
+
+<div id="colorResult" class="big"></div>
+
+</div>
+</div>
+  
 <h3>🏆 メダル</h3>
 
 <div id="medals" class="badges">－</div>
@@ -186,7 +221,43 @@ EXP：<span id="exp">0</span><br>
 </div>
 
 <script>
+let audioCtx=null;
 
+function initAudio(){
+
+if(!audioCtx){
+
+audioCtx =
+new (
+window.AudioContext ||
+window.webkitAudioContext
+)();
+}
+
+if(audioCtx.state==="suspended"){
+audioCtx.resume();
+}
+}
+
+function beep(freq,duration){
+
+initAudio();
+
+const osc=audioCtx.createOscillator();
+const gain=audioCtx.createGain();
+
+osc.connect(gain);
+gain.connect(audioCtx.destination);
+
+osc.frequency.value=freq;
+gain.gain.value=0.15;
+
+osc.start();
+
+osc.stop(audioCtx.currentTime+duration);
+}
+
+  
 let data = JSON.parse(
 localStorage.getItem("kidsLand")
 ) || {
@@ -219,6 +290,8 @@ document
 }
 
 function addExp(v){
+
+beep(1000,0.15);
 
 data.exp += v;
 data.correct++;
@@ -399,8 +472,85 @@ area.appendChild(btn);
 });
 }
 
+const colorQuiz=[
+{color:"red",name:"あか"},
+{color:"blue",name:"あお"},
+{color:"yellow",name:"きいろ"},
+{color:"green",name:"みどり"},
+{color:"purple",name:"むらさき"},
+{color:"orange",name:"オレンジ"}
+];
+
+let currentColor;
+
+function createColorQuiz(){
+
+const item=
+colorQuiz[
+Math.floor(
+Math.random()*colorQuiz.length
+)
+];
+
+currentColor=item;
+
+document.getElementById("colorBox")
+.style.background=item.color;
+
+let choices=
+colorQuiz
+.map(v=>v.name)
+.sort(()=>Math.random()-0.5)
+.slice(0,3);
+
+if(!choices.includes(item.name)){
+choices[0]=item.name;
+}
+
+choices.sort(()=>Math.random()-0.5);
+
+const area=
+document.getElementById("colorAnswers");
+
+area.innerHTML="";
+
+choices.forEach(name=>{
+
+const btn=
+document.createElement("button");
+
+btn.className="answerBtn";
+btn.textContent=name;
+
+btn.onclick=()=>{
+
+if(name===currentColor.name){
+
+addExp(10);
+
+document.getElementById("colorResult")
+.textContent="🎉 せいかい！";
+
+}else{
+
+beep(250,0.3);
+
+document.getElementById("colorResult")
+.textContent="😢 ざんねん";
+}
+
+setTimeout(createColorQuiz,1000);
+};
+
+area.appendChild(btn);
+
+});
+
+}
+  
 createMath("add");
 createMath("sub");
+createColorQuiz();
 updateUI();
 
 </script>
