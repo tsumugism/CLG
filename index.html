@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>こどもランド v2</title>
+<title>こどもランド v3</title>
 
 <style>
+
 body{
 margin:0;
 font-family:"Yu Gothic",sans-serif;
@@ -26,17 +27,17 @@ display:flex;
 flex-wrap:wrap;
 justify-content:center;
 gap:10px;
-padding:15px;
+padding:12px;
 }
 
 #menu button{
 border:none;
 border-radius:15px;
-padding:12px 16px;
-font-size:18px;
-background:#ffffff;
-cursor:pointer;
+padding:12px 18px;
+font-size:24px;
+background:white;
 box-shadow:0 2px 6px rgba(0,0,0,.2);
+cursor:pointer;
 }
 
 .page{
@@ -50,15 +51,15 @@ display:block;
 
 .card{
 background:white;
-border-radius:20px;
-padding:20px;
 max-width:700px;
 margin:auto;
+padding:20px;
+border-radius:20px;
 box-shadow:0 4px 10px rgba(0,0,0,.15);
 }
 
 .character{
-font-size:80px;
+font-size:90px;
 text-align:center;
 }
 
@@ -66,16 +67,6 @@ text-align:center;
 font-size:42px;
 text-align:center;
 margin:20px;
-}
-
-.answerBtn{
-background:#4dabf7;
-color:white;
-border:none;
-padding:12px 20px;
-margin:5px;
-border-radius:12px;
-font-size:24px;
 }
 
 .status{
@@ -88,7 +79,19 @@ font-size:40px;
 }
 
 .stamp{
-font-size:50px;
+font-size:60px;
+text-align:center;
+}
+
+.answerBtn{
+background:#4dabf7;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:15px;
+font-size:24px;
+margin:5px;
+cursor:pointer;
 }
 
 .handBtn{
@@ -100,15 +103,33 @@ border-radius:25px;
 background:#ffd166;
 margin:10px;
 cursor:pointer;
-} 
-  
+}
+
+.handBtn:hover,
+.answerBtn:hover{
+transform:scale(1.05);
+}
+
+#colorBox{
+width:180px;
+height:180px;
+margin:auto;
+border-radius:20px;
+border:6px solid #333;
+}
+
+h2{
+text-align:center;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-🎮 こどもランド v2
+🎮 こどもランド v3
 </header>
 
 <div id="menu">
@@ -116,110 +137,168 @@ cursor:pointer;
 <button onclick="showPage('janken')">✊</button>
 <button onclick="showPage('add')">➕</button>
 <button onclick="showPage('sub')">➖</button>
+<button onclick="showPage('color')">🎨</button>
 <button onclick="showPage('chara')">🐣</button>
-<button onclick="showPage('color')">🎨</button>  
 </div>
+
+<!-- HOME -->
 
 <div id="home" class="page active">
 <div class="card">
+
 <h2>ようこそ！</h2>
 
-<div class="character" id="homeChara">🥚</div>
+<div id="homeChara" class="character">🥚</div>
 
 <div class="status">
 レベル：<span id="levelHome">1</span><br>
 EXP：<span id="expHome">0</span><br>
-せいかい：<span id="correctHome">0</span>
+せいかい数：<span id="correctHome">0</span>
 </div>
 
 <h3>🏆 メダル</h3>
 <div id="medalsHome" class="badges">－</div>
 
 <h3>📅 今日のスタンプ</h3>
-<div id="todayStamp" class="stamp">❌</div>
+<div id="todayStamp" class="stamp">⭐</div>
+
 </div>
 </div>
+
+<!-- JANKEN -->
 
 <div id="janken" class="page">
 <div class="card">
+
 <h2>✊じゃんけん✋</h2>
 
-<button class="handBtn" onclick="playJanken('グー')">✊</button>
-<button class="handBtn" onclick="playJanken('チョキ')">✌️</button>
-<button class="handBtn" onclick="playJanken('パー')">✋</button>
+<div style="text-align:center;">
 
-<div id="jankenResult" class="big">
+<button class="handBtn"
+onclick="playJanken('グー')">
+✊
+</button>
+
+<button class="handBtn"
+onclick="playJanken('チョキ')">
+✌️
+</button>
+
+<button class="handBtn"
+onclick="playJanken('パー')">
+✋
+</button>
+
+</div>
+
+<div
+id="jankenResult"
+class="big">
 じゃんけんしよう！
 </div>
+
 </div>
 </div>
+
+<!-- ADD -->
 
 <div id="add" class="page">
 <div class="card">
+
 <h2>➕たしざん</h2>
 
-<div id="addQuestion" class="big"></div>
+<div id="addQuestion"
+class="big">
+</div>
 
 <div id="addAnswers"></div>
 
-<div id="addResult"></div>
+<div id="addResult"
+class="big">
+</div>
+
 </div>
 </div>
+
+<!-- SUB -->
 
 <div id="sub" class="page">
 <div class="card">
+
 <h2>➖ひきざん</h2>
 
-<div id="subQuestion" class="big"></div>
+<div id="subQuestion"
+class="big">
+</div>
 
 <div id="subAnswers"></div>
 
-<div id="subResult"></div>
+<div id="subResult"
+class="big">
+</div>
+
 </div>
 </div>
+
+<!-- COLOR -->
+
+<div id="color" class="page">
+<div class="card">
+
+<h2>🎨 いろあてゲーム</h2>
+
+<div id="colorBox"></div>
+
+<br>
+
+<div id="colorAnswers"></div>
+
+<div id="colorResult"
+class="big">
+</div>
+
+</div>
+</div>
+
+<!-- CHARACTER -->
 
 <div id="chara" class="page">
 <div class="card">
 
 <h2>🐣 キャラクター</h2>
 
-<div id="character" class="character">🥚</div>
+<div
+id="character"
+class="character">
+🥚
+</div>
 
 <div class="status">
-レベル：<span id="level">1</span><br>
-EXP：<span id="exp">0</span><br>
-せいかい数：<span id="correct">0</span>
+
+レベル：
+<span id="level">1</span>
+
+<br>
+
+EXP：
+<span id="exp">0</span>
+
+<br>
+
+せいかい数：
+<span id="correct">0</span>
+
 </div>
 
-<div id="color" class="page">
-<div class="card">
-
-<div id="colorAnswers"></div>
-
-<div id="colorResult" class="big"></div>
-
-</div>
-</div>
-  
 <h3>🏆 メダル</h3>
 
-<div id="medals" class="badges">－</div>
-
+<div
+id="medals"
+class="badges">
+－
 </div>
 
-  <h2>🎨 いろあてゲーム</h2>
-
-<div id="colorBox"
-style="
-width:180px;
-height:180px;
-margin:auto;
-border-radius:20px;
-border:6px solid #333;
-">
 </div>
-
-  
 </div>
 
 <script>
@@ -234,76 +313,96 @@ new (
 window.AudioContext ||
 window.webkitAudioContext
 )();
+
 }
 
 if(audioCtx.state==="suspended"){
 audioCtx.resume();
 }
+
 }
 
 function beep(freq,duration){
 
 initAudio();
 
-const osc=audioCtx.createOscillator();
-const gain=audioCtx.createGain();
+const osc=
+audioCtx.createOscillator();
+
+const gain=
+audioCtx.createGain();
 
 osc.connect(gain);
 gain.connect(audioCtx.destination);
 
 osc.frequency.value=freq;
-gain.gain.value=0.15;
+gain.gain.value=0.12;
 
 osc.start();
 
-osc.stop(audioCtx.currentTime+duration);
+osc.stop(
+audioCtx.currentTime+duration
+);
+
 }
 
-  
-let data = JSON.parse(
+let data=
+JSON.parse(
 localStorage.getItem("kidsLand")
 ) || {
+
 exp:0,
 level:1,
 correct:0,
-lastLogin:"",
+lastLogin:""
+
 };
 
 function save(){
+
 localStorage.setItem(
 "kidsLand",
 JSON.stringify(data)
 );
+
 }
 
 function today(){
-return new Date().toISOString().split("T")[0];
+
+return new Date()
+.toISOString()
+.split("T")[0];
+
 }
 
 function showPage(id){
 
 document
 .querySelectorAll(".page")
-.forEach(p=>p.classList.remove("active"));
+.forEach(
+p=>p.classList.remove("active")
+);
 
 document
 .getElementById(id)
 .classList.add("active");
+
 }
 
 function addExp(v){
 
 beep(1000,0.15);
 
-data.exp += v;
+data.exp+=v;
 data.correct++;
 
-data.level =
-Math.floor(data.exp / 50)+1;
+data.level=
+Math.floor(data.exp/50)+1;
 
 save();
 
 updateUI();
+
 }
 
 function getCharacter(){
@@ -314,6 +413,7 @@ if(data.level>=5) return "🐤";
 if(data.level>=3) return "🐣";
 
 return "🥚";
+
 }
 
 function medals(){
@@ -326,122 +426,207 @@ if(data.correct>=20) m.push("🥇");
 if(data.correct>=50) m.push("🏆");
 if(data.correct>=100) m.push("👑");
 
-return m.length?m.join(" "):"－";
+return m.length
+? m.join(" ")
+: "－";
+
 }
 
 function updateUI(){
 
-document.getElementById("level").textContent=data.level;
-document.getElementById("exp").textContent=data.exp;
-document.getElementById("correct").textContent=data.correct;
+document.getElementById(
+"level"
+).textContent=data.level;
 
-document.getElementById("character").textContent=getCharacter();
+document.getElementById(
+"exp"
+).textContent=data.exp;
 
-document.getElementById("medals").textContent=medals();
+document.getElementById(
+"correct"
+).textContent=data.correct;
 
-document.getElementById("levelHome").textContent=data.level;
-document.getElementById("expHome").textContent=data.exp;
-document.getElementById("correctHome").textContent=data.correct;
-document.getElementById("homeChara").textContent=getCharacter();
-document.getElementById("medalsHome").textContent=medals();
+document.getElementById(
+"character"
+).textContent=getCharacter();
+
+document.getElementById(
+"medals"
+).textContent=medals();
+
+document.getElementById(
+"levelHome"
+).textContent=data.level;
+
+document.getElementById(
+"expHome"
+).textContent=data.exp;
+
+document.getElementById(
+"correctHome"
+).textContent=data.correct;
+
+document.getElementById(
+"homeChara"
+).textContent=getCharacter();
+
+document.getElementById(
+"medalsHome"
+).textContent=medals();
+
 }
 
 if(data.lastLogin!==today()){
 
 data.lastLogin=today();
-
-data.exp += 5;
+data.exp+=5;
 
 save();
 
-document.getElementById("todayStamp")
-.textContent="⭐";
-}
-else{
+document.getElementById(
+"todayStamp"
+).textContent="⭐";
 
-document.getElementById("todayStamp")
-.textContent="✅";
+}else{
+
+document.getElementById(
+"todayStamp"
+).textContent="✅";
+
 }
 
 function playJanken(player){
 
-const hands=["グー","チョキ","パー"];
-const cpu=hands[Math.floor(Math.random()*3)];
+initAudio();
+
+const hands=[
+"グー",
+"チョキ",
+"パー"
+];
+
+const cpu=
+hands[
+Math.floor(
+Math.random()*3
+)
+];
 
 let msg="";
 
 if(player===cpu){
+
 msg="😆 あいこ";
+
 }
 else if(
-(player==="グー"&&cpu==="チョキ")||
-(player==="チョキ"&&cpu==="パー")||
-(player==="パー"&&cpu==="グー")
+
+(player==="グー" && cpu==="チョキ") ||
+(player==="チョキ" && cpu==="パー") ||
+(player==="パー" && cpu==="グー")
+
 ){
+
 msg="🎉 かった！";
+
 addExp(10);
-}
-else{
+
+}else{
+
 msg="😢 まけた";
+
+beep(250,0.3);
+
 }
 
-document.getElementById("jankenResult")
-.innerHTML=`${msg}<br>${cpu}`;
+document.getElementById(
+"jankenResult"
+).innerHTML=
+
+`${msg}<br>${cpu}`;
+
 }
 
 function createMath(type){
 
-let a=Math.floor(Math.random()*90)+10;
-let b=Math.floor(Math.random()*90)+10;
+let a=
+Math.floor(
+Math.random()*90
+)+10;
 
-let answer=
-type==="add" ? a+b : a-b;
+let b=
+Math.floor(
+Math.random()*90
+)+10;
 
-if(type==="sub" && answer<0){
+if(type==="sub" && a<b){
+
 [a,b]=[b,a];
-answer=a-b;
+
 }
 
-const q=
+let answer=
 type==="add"
-? `${a}+${b}`
-: `${a}-${b}`;
+? a+b
+: a-b;
 
 const area=
 document.getElementById(
+
 type==="add"
-?"addAnswers"
-:"subAnswers"
+? "addAnswers"
+: "subAnswers"
+
 );
 
 document.getElementById(
+
 type==="add"
-?"addQuestion"
-:"subQuestion"
-).textContent=q;
+? "addQuestion"
+: "subQuestion"
+
+).textContent=
+
+type==="add"
+? `${a} + ${b}`
+: `${a} - ${b}`;
 
 let choices=[answer];
 
-while(choices.length<4){
+while(
+choices.length<4
+){
 
-let w=
+const wrong=
 answer+
-Math.floor(Math.random()*21)-10;
+Math.floor(
+Math.random()*21
+)-10;
 
-if(!choices.includes(w))
-choices.push(w);
+if(
+!choices.includes(wrong)
+){
+choices.push(wrong);
 }
 
-choices.sort(()=>Math.random()-0.5);
+}
+
+choices.sort(
+()=>Math.random()-0.5
+);
 
 area.innerHTML="";
 
 choices.forEach(v=>{
 
 const btn=
-document.createElement("button");
+document.createElement(
+"button"
+);
 
-btn.className="answerBtn";
+btn.className=
+"answerBtn";
+
 btn.textContent=v;
 
 btn.onclick=()=>{
@@ -451,36 +636,74 @@ if(v===answer){
 addExp(10);
 
 document.getElementById(
-type==="add"
-?"addResult"
-:"subResult"
-).innerHTML="🎉 せいかい！";
 
-}
-else{
+type==="add"
+? "addResult"
+: "subResult"
+
+).textContent=
+"🎉 せいかい！";
+
+}else{
+
+beep(250,0.3);
 
 document.getElementById(
+
 type==="add"
-?"addResult"
-:"subResult"
-).innerHTML=
+? "addResult"
+: "subResult"
+
+).textContent=
 "😢 ざんねん";
+
 }
 
-setTimeout(()=>createMath(type),800);
+setTimeout(
+()=>createMath(type),
+1000
+);
+
 };
 
 area.appendChild(btn);
+
 });
+
 }
 
 const colorQuiz=[
-{color:"red",name:"あか"},
-{color:"blue",name:"あお"},
-{color:"yellow",name:"きいろ"},
-{color:"green",name:"みどり"},
-{color:"purple",name:"むらさき"},
-{color:"orange",name:"オレンジ"}
+
+{
+color:"red",
+name:"あか"
+},
+
+{
+color:"blue",
+name:"あお"
+},
+
+{
+color:"yellow",
+name:"きいろ"
+},
+
+{
+color:"green",
+name:"みどり"
+},
+
+{
+color:"purple",
+name:"むらさき"
+},
+
+{
+color:"orange",
+name:"オレンジ"
+}
+
 ];
 
 let currentColor;
@@ -488,60 +711,106 @@ let currentColor;
 function createColorQuiz(){
 
 const item=
+
 colorQuiz[
 Math.floor(
-Math.random()*colorQuiz.length
+Math.random()*
+colorQuiz.length
 )
 ];
 
 currentColor=item;
 
-document.getElementById("colorBox")
-.style.background=item.color;
+document.getElementById(
+"colorBox"
+).style.background=
+item.color;
 
-let choices=
-colorQuiz
-.map(v=>v.name)
-.sort(()=>Math.random()-0.5)
-.slice(0,3);
+let choices=[
+item.name
+];
 
-if(!choices.includes(item.name)){
-choices[0]=item.name;
+while(
+choices.length<3
+){
+
+const candidate=
+
+colorQuiz[
+Math.floor(
+Math.random()*
+colorQuiz.length
+)
+].name;
+
+if(
+!choices.includes(
+candidate
+)
+){
+choices.push(candidate);
 }
 
-choices.sort(()=>Math.random()-0.5);
+}
+
+choices.sort(
+()=>Math.random()-0.5
+);
 
 const area=
-document.getElementById("colorAnswers");
+document.getElementById(
+"colorAnswers"
+);
 
 area.innerHTML="";
 
 choices.forEach(name=>{
 
 const btn=
-document.createElement("button");
+document.createElement(
+"button"
+);
 
-btn.className="answerBtn";
-btn.textContent=name;
+btn.className=
+"answerBtn";
+
+btn.textContent=
+name;
 
 btn.onclick=()=>{
 
-if(name===currentColor.name){
+if(
+name===
+currentColor.name
+){
 
 addExp(10);
 
-document.getElementById("colorResult")
-.textContent="🎉 せいかい！";
+document
+.getElementById(
+"colorResult"
+)
+.textContent=
+"🎉 せいかい！";
 
 }else{
 
 beep(250,0.3);
 
-document.getElementById("colorResult")
-.textContent="😢 ざんねん";
+document
+.getElementById(
+"colorResult"
+)
+.textContent=
+"😢 ざんねん";
+
 }
 
-setTimeout(createColorQuiz,1000);
+setTimeout(
+createColorQuiz,
+1000
+);
+
 };
 
 area.appendChild(btn);
@@ -549,13 +818,12 @@ area.appendChild(btn);
 });
 
 }
-  
+
 createMath("add");
 createMath("sub");
 createColorQuiz();
 updateUI();
 
 </script>
-
 </body>
 </html>
